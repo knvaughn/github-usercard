@@ -1,3 +1,63 @@
+import axios from 'axios';
+
+const cards = document.querySelector('.cards');
+axios.get('https://api.github.com/users/knvaughn')
+.then((response) => {
+  console.log(response.data);
+  cards.appendChild(createCard(response.data));
+});
+
+const followersArray = ['tetondan', 'dustinmyers', 'justsml', 'luishrd', 'bigknell'];
+
+followersArray.map((user) => {
+  axios.get(`https://api.github.com/users/${user}`)
+  .then((response) => {
+    cards.appendChild(createCard(response.data));
+  });
+});
+
+function createCard(obj) {
+  const card = document.createElement('div');
+  const img = document.createElement('img');
+  const cardInfo = document.createElement('div');
+  const name = document.createElement('h3');
+  const username = document.createElement('p');
+  const location = document.createElement('p');
+  const profile = document.createElement('p');
+  const profileLink = document.createElement('a');
+  const followers = document.createElement('p');
+  const following = document.createElement('p');
+  const bio = document.createElement('p');
+
+  card.classList.add('card');
+  img.src = obj.avatar_url;
+  cardInfo.classList.add('card-info');
+  name.classList.add('name');
+  name.textContent = obj.name;
+  username.classList.add('username');
+  username.textContent = obj.login;
+  location.textContent = `Location: ${obj.location}`;
+  profile.textContent = "Profile: ";
+  profileLink.href = obj.html_url;
+  profileLink.textContent = obj.html_url;
+  followers.textContent = `Followers: ${obj.followers}`;
+  following.textContent = `Following: ${obj.following}`;
+  bio.textContent = `Bio: ${obj.bio}`;
+
+  card.appendChild(img);
+  card.appendChild(cardInfo);
+  cardInfo.appendChild(name);
+  cardInfo.appendChild(username);
+  cardInfo.appendChild(location);
+  cardInfo.appendChild(profile);
+  profile.appendChild(profileLink);
+  cardInfo.appendChild(followers);
+  cardInfo.appendChild(following);
+  cardInfo.appendChild(bio);
+
+  return card;
+};
+
 /*
   STEP 1: using axios, send a GET request to the following URL
     (replacing the placeholder with your Github name):
@@ -27,8 +87,6 @@
     Using that array, iterate over it, requesting data for each user, creating a new card for each
     user, and adding that card to the DOM.
 */
-
-const followersArray = [];
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
